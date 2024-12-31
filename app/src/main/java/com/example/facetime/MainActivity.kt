@@ -22,7 +22,7 @@ import com.example.facetime.ui_layer.routes.signup
 import com.example.facetime.ui_layer.signup.SignUpScreen
 import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
