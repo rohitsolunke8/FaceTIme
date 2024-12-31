@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302122528280",
+    "project_id": "face-time-c0197",
+    "storage_bucket": "face-time-c0197.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302122528280:android:3f385535e772bc848b1d6d",
+        "android_client_info": {
+          "package_name": "com.example.facetime"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWwjciLcUQbjsIhPRg0533PVgWoXTwrus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }ō
+  ],
+  "configuration_version": "1"
+}

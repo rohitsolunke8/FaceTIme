@@ -8,18 +8,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.facetime.home.HomeScreen
-import com.example.facetime.login.LoginScreen
-import com.example.facetime.login.SignUpScreen
 import com.example.facetime.ui.theme.FaceTImeTheme
+import com.example.facetime.ui_layer.home.HomeScreen
+import com.example.facetime.ui_layer.login.LoginScreen
+import com.example.facetime.ui_layer.routes.home
+import com.example.facetime.ui_layer.routes.login
+import com.example.facetime.ui_layer.routes.signup
+import com.example.facetime.ui_layer.signup.SignUpScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +46,15 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") {
-            LoginScreen()
+    NavHost(navController = navController, startDestination = login) {
+        composable<login> {
+            LoginScreen(navController)
         }
-        composable("signup") {
-            SignUpScreen()
+        composable<signup> {
+            SignUpScreen(navController)
         }
-        composable("home") {
-            HomeScreen()
+        composable<home> {
+            HomeScreen(navController)
         }
     }
 }
