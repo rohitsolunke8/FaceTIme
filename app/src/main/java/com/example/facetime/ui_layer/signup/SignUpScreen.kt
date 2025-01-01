@@ -9,12 +9,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,23 +34,40 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.facetime.ui_layer.routes.home
 import com.example.facetime.ui_layer.routes.login
 
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController, viewModel: SignupViewModel = hiltViewModel()) {
+
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmedPassword by remember { mutableStateOf("") }
-
+    val state = viewModel.signupStateFlow.collectAsState()
     val showPassword by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    var loading by remember { mutableStateOf(false) }
 
     val icon = if (showPassword) {
         Icons.Outlined.Visibility
     } else {
         Icons.Outlined.VisibilityOff
+    }
+
+    LaunchedEffect(state.value) {
+        when(state.value) {
+            SignupState.Error -> loading = false
+            SignupState.Loading -> loading = true
+            SignupState.Normal -> loading = false
+            SignupState.Success -> navController.navigate(home) {
+                popUpTo<login>{
+                    inclusive = true
+                }
+            }
+        }
     }
 
     Column(
@@ -116,9 +136,16 @@ fun SignUpScreen(navController: NavHostController) {
             else PasswordVisualTransformation()
         )
         Button(
-            onClick = {}
+            enabled = userName.isNotBlank() && password.isNotEmpty() && confirmedPassword.isNotEmpty() && password == confirmedPassword,
+            onClick = { viewModel.signup(userName, password) }
         ) {
-            Text("Signup")
+            if (loading) {
+                CircularProgressIndicator(
+                    trackColor = Color.White
+                )
+            } else {
+                Text("Signup")
+            }
         }
         TextButton(
             onClick = {

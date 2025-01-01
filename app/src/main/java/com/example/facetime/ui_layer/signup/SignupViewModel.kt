@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class SignupViewModel @Inject constructor() : ViewModel() {
 
     private val signupState = MutableStateFlow<SignupState>(SignupState.Normal)
     val signupStateFlow = signupState.asStateFlow()
