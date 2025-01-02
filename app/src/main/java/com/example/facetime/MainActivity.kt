@@ -3,26 +3,16 @@ package com.example.facetime
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.facetime.ui.theme.FaceTImeTheme
-import com.example.facetime.ui_layer.home.HomeScreen
-import com.example.facetime.ui_layer.login.LoginScreen
-import com.example.facetime.ui_layer.routes.home
-import com.example.facetime.ui_layer.routes.login
-import com.example.facetime.ui_layer.routes.signup
-import com.example.facetime.ui_layer.signup.SignUpScreen
+import com.example.facetime.ui_layer.routes.AppNavigation
 import com.permissionx.guolindev.PermissionX
 import com.zegocloud.uikit.internal.ZegoUIKitLanguage
 import com.zegocloud.uikit.prebuilt.call.ZegoUIKitPrebuiltCallService
@@ -98,28 +88,9 @@ class MainActivity : FragmentActivity() {
 
     private fun permissionHandling(activityContext: FragmentActivity) {
         PermissionX.init(activityContext).permissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
-            .onExplainRequestReason{ scope, deniedList ->
+            .onExplainRequestReason { scope, deniedList ->
                 val message = "We need permission"
                 scope.showRequestReasonDialog(deniedList, message, "Allow", "Deny")
-            }.request{ allGranted, grantList, deniedList ->}
-    }
-}
-
-
-@Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
-
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = home) {
-        composable<login> {
-            LoginScreen(navController)
-        }
-        composable<signup> {
-            SignUpScreen(navController)
-        }
-        composable<home> {
-            HomeScreen(navController)
-        }
+            }.request { allGranted, grantList, deniedList -> }
     }
 }

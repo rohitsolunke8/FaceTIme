@@ -58,12 +58,12 @@ fun SignUpScreen(navController: NavHostController, viewModel: SignupViewModel = 
     }
 
     LaunchedEffect(state.value) {
-        when(state.value) {
+        when (state.value) {
             SignupState.Error -> loading = false
             SignupState.Loading -> loading = true
             SignupState.Normal -> loading = false
             SignupState.Success -> navController.navigate(home) {
-                popUpTo<login>{
+                popUpTo<login> {
                     inclusive = true
                 }
             }
