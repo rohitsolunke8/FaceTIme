@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.facetime.ui_layer.routes.home
+import com.example.facetime.ui_layer.routes.login
 import com.example.facetime.ui_layer.routes.signup
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,10 +108,13 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
         )
 
         Button(
+            enabled = userName.isNotEmpty() && password.isNotBlank(),
             onClick = { viewModel.login(userName, password) }
         ) {
             if (loading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    trackColor = Color.White,
+                )
             } else {
                 Text("Login")
             }
@@ -134,7 +138,11 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
             }
 
             is LoginState.Success -> {
-                navController.navigate(home)
+                navController.navigate(home){
+                    popUpTo(login) {
+                        inclusive = true
+                    }
+                }
             }
 
             is LoginState.Error -> {
