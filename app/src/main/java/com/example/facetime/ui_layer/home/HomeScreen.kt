@@ -8,7 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,13 +37,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
 
     val context = LocalContext.current as MainActivity
-
+    val user = FirebaseAuth.getInstance().currentUser
     LaunchedEffect(key1 = Unit) {
-        val user = FirebaseAuth.getInstance().currentUser
+
         Log.d("User", "HomeScreen: $user")
         user?.let {
             context.initZegoInviteServices(appId, appSign, it.email!!, it.email!!)
@@ -46,43 +54,65 @@ fun HomeScreen(navController: NavHostController) {
 
     var targetUserId by remember { mutableStateOf("") }
 
-    Column(
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Scaffold(
+        floatingActionButton = {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                FloatingActionButton(onClick = {}) {
+                    IconButton(onClick = {}) {
+                        CallButton(
+                            Modifier
+                                .size(16.dp)
+                                .background(Color.Yellow),
+                            isVideoCall = true
+                        ) { button ->
+                            if (targetUserId.isNotEmpty()) button.setInvitees(
+                                mutableListOf(
+                                    ZegoUIKitUser(
+                                        targetUserId
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+                FloatingActionButton(onClick = {}) {
+                    IconButton(onClick = {}) {
+                        CallButton(
+                            modifier = Modifier
+                                .size(160.dp)
+                                .background(Color.Green), isVideoCall = false
+                        ) { button ->
+                            if (targetUserId.isNotEmpty()) button.setInvitees(
+                                mutableListOf(
+                                    ZegoUIKitUser(
+                                        targetUserId
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+                FloatingActionButton(onClick = {}) {
+                    Icon(Icons.Outlined.Chat, "Chat Button")
+                }
+            }
+        }
     ) {
-        OutlinedTextField(
-            value = targetUserId,
-            onValueChange = { targetUserId = it },
-            label = { Text("Enter your email") }
-        )
-
-        Row(
-            Modifier
-                .fillMaxWidth(1f)
-                .background(color = Color.Green),
-//                .align(alignment = Alignment.Bottom),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        it
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            CallButton(modifier = Modifier.size(16.dp), isVideoCall = false) { button ->
-                if (targetUserId.isNotEmpty()) button.setInvitees(
-                    mutableListOf(
-                        ZegoUIKitUser(
-                            targetUserId
-                        )
-                    )
-                )
-            }
-
-            CallButton(modifier = Modifier.size(16.dp), isVideoCall = true) { button ->
-                if (targetUserId.isNotEmpty()) button.setInvitees(
-                    mutableListOf(
-                        ZegoUIKitUser(
-                            targetUserId
-                        )
-                    )
-                )
-            }
+            Text("${user?.email}")
+            OutlinedTextField(
+                value = targetUserId,
+                onValueChange = { targetUserId = it },
+                label = { Text("Enter your email") }
+            )
         }
     }
 }
